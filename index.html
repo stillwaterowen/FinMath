@@ -158,39 +158,8 @@ nav div {
   #theme-toggle {
     margin-top: 1rem; /* Add spacing above the toggle button */
   }
-  nav {
-  overflow: hidden; /* Prevent content from overflowing */
-  padding: 1rem; /* Reduce padding for smaller screens */
-}
-
-nav div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-  gap: 1rem; /* Add spacing between items */
-}
-
-nav div > div {
-  display: flex;
-  flex-wrap: wrap; /* Allow navigation links to wrap */
-  gap: 1rem; /* Add spacing between links */
-}
-
-/* Adjust layout for smaller screens */
-@media (max-width: 768px) {
-  nav div {
-    flex-direction: column; /* Stack items vertically */
-    align-items: flex-start; /* Align items to the left */
-  }
-
-  nav div > div {
-    flex-direction: column; /* Stack navigation links vertically */
-  }
-
   #theme-toggle {
-    margin-top: 1rem; /* Add spacing above the toggle button */
-  }
+  margin-right: 16px; /* Add space to the right of the button */
 }
   </style>
 </head>
