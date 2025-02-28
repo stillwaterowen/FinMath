@@ -139,6 +139,25 @@
       cursor: pointer;
       font-size: 1.5rem;
     }
+    nav {
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+nav div {
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  gap: 1rem; /* Add spacing between items */
+}
+
+/* Adjust layout for smaller screens */
+@media (max-width: 768px) {
+  nav div {
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align items to the left */
+  }
+
+  #theme-toggle {
+    margin-top: 1rem; /* Add spacing above the toggle button */
+  }
   </style>
 </head>
 <body>
