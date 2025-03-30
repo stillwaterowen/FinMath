@@ -24,33 +24,37 @@
     nav {
       background-color: #ffffff;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 1rem 2rem;
+      padding: 1rem 1.5rem;
       position: fixed;
       width: 100%;
       top: 0;
       z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
     }
 
     nav.dark {
       background-color: #374151;
     }
 
-    nav a {
+    .nav-brand {
       color: #4f46e5;
       text-decoration: none;
-      margin: 0 1rem;
-      font-weight: 500;
+      font-weight: bold;
+      font-size: 1.5rem;
     }
 
-    nav a:hover {
+    .nav-brand:hover {
       color: #6366f1;
     }
 
-    nav.dark a {
+    nav.dark .nav-brand {
       color: #818cf8;
     }
 
-    nav.dark a:hover {
+    nav.dark .nav-brand:hover {
       color: #a5b4fc;
     }
 
@@ -84,6 +88,7 @@
       border-radius: 0.5rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid #e5e7eb;
     }
 
     .tool-card:hover {
@@ -92,13 +97,19 @@
     }
 
     .tool-card.dark {
-      background-color: #374151;
+      background-color: #4b5563;
+      border-color: #6b7280;
     }
 
     .tool-card h2 {
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
+      color: #4f46e5;
+    }
+
+    .tool-card.dark h2 {
+      color: #a5b4fc;
     }
 
     .tool-card p {
@@ -107,7 +118,7 @@
     }
 
     .tool-card.dark p {
-      color: #9ca3af;
+      color: #d1d5db;
     }
 
     /* Footer */
@@ -138,37 +149,16 @@
       border: none;
       cursor: pointer;
       font-size: 1.5rem;
+      padding: 0.25rem;
+      margin-right: 0.5rem;
     }
-    nav {
-  overflow: hidden; /* Prevent content from overflowing */
-}
-
-nav div {
-  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-  gap: 1rem; /* Add spacing between items */
-}
-  #theme-toggle {
-  margin-right: 16px; /* Add space to the right of the button */
-}
   </style>
 </head>
 <body>
   <!-- Navigation Bar -->
   <nav>
-      <a href="index.html" style="font-size: 1.5rem; font-weight: bold;">FinMath</a>
-      <div>
-        <a href="index.html">Home</a>
-        <a href="budgeting.html">Budgeting</a>
-        <a href="rates.html">Rates</a>
-        <a href="appreciation.html">Appreciation</a>
-        <a href="interest.html">Interest</a>
-        <a href="investments.html">Investments</a>
-        <a href="savings.html">Savings</a>
-        <a href="currency.html">Currency</a>
-        </div>
-      <button id="theme-toggle">🌙</button>
-      </div>
-    </div>
+    <a href="index.html" class="nav-brand">FinMath</a>
+    <button id="theme-toggle">🌙</button>
   </nav>
 
   <!-- Main Content -->
