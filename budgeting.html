@@ -220,7 +220,78 @@
         localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     });
 
-    // ... (rest of your budget functionality remains the same)
+    // Budget Functionality
+    let expenses = [];
+    
+    function addExpense() {
+      const category = document.getElementById('expense-category').value;
+      const amount = parseFloat(document.getElementById('expense-amount').value);
+      const type = document.getElementById('expense-type').value;
+
+      if (amount > 0) {
+        expenses.push({ category, amount, type });
+        updateBudget();
+        document.getElementById('expense-amount').value = '';
+      }
+    }
+
+    function updateBudget() {
+      const income = parseFloat(document.getElementById('income').value) || 0;
+      const savingsRate = parseFloat(document.getElementById('savings').value) || 0;
+      const savingsAmount = income * (savingsRate / 100);
+      const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
+      const remaining = income - savingsAmount - totalExpenses;
+
+      // Update display
+      document.getElementById('total-income').textContent = income.toFixed(2);
+      document.getElementById('total-expenses').textContent = totalExpenses.toFixed(2);
+      document.getElementById('savings-amount').textContent = savingsAmount.toFixed(2);
+      document.getElementById('remaining-balance').textContent = remaining.toFixed(2);
+
+      // Update expense list
+      const expenseList = document.getElementById('expense-list');
+      expenseList.innerHTML = expenses.map((expense, index) => `
+        <div class="expense-item">
+          <span>${expense.category} (${expense.type})</span>
+          <span>$${expense.amount.toFixed(2)}
+            <button onclick="removeExpense(${index})">×</button>
+          </span>
+        </div>
+      `).join('');
+
+      updateChart();
+    }
+
+    function removeExpense(index) {
+      expenses.splice(index, 1);
+      updateBudget();
+    }
+
+    // Chart Implementation
+    let expenseChart;
+    function updateChart() {
+      if (expenseChart) expenseChart.destroy();
+      
+      const categories = [...new Set(expenses.map(e => e.category))];
+      const data = categories.map(cat => 
+        expenses.filter(e => e.category === cat).reduce((sum, e) => sum + e.amount, 0)
+      );
+
+      expenseChart = new Chart(document.getElementById('expenseChart'), {
+        type: 'pie',
+        data: {
+          labels: categories,
+          datasets: [{
+            data: data,
+            backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+          }]
+        }
+      });
+    }
+
+    // Initialize
+    document.getElementById('income').addEventListener('input', updateBudget);
+    document.getElementById('savings').addEventListener('input', updateBudget);
 </script>
 </body>
 </html>
