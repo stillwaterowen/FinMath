@@ -267,7 +267,34 @@
 
   <script>
     // Dark Mode Toggle (Same as Previous Pages)
-    // ... (Copy identical dark mode script from rates.html) ...
+    // Dark Mode Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const nav = document.querySelector('nav');
+    const footer = document.querySelector('footer');
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    // Check for saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        body.classList.add(savedTheme);
+        nav.classList.add(savedTheme);
+        footer.classList.add(savedTheme);
+        toolCards.forEach(card => card.classList.add(savedTheme));
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Toggle theme
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark');
+        nav.classList.toggle('dark');
+        footer.classList.toggle('dark');
+        toolCards.forEach(card => card.classList.toggle('dark'));
+        
+        const isDarkMode = body.classList.contains('dark');
+        themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    });
 
     let depreciationMethod = 'straight';
     let valueChart;
