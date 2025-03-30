@@ -1,1 +1,408 @@
-interest
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interest & Borrowing - FinMath</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Inherited Homepage Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f4f6;
+      color: #111827;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f4f6;
+      color: #111827;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background-color: #1f2937;
+      color: #f3f4f6;
+    }
+
+    /* Navigation Bar */
+    nav {
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1rem 1.5rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    nav.dark {
+      background-color: #374151;
+    }
+
+    .nav-brand {
+      color: #4f46e5;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    /* Main Content */
+    main {
+      padding: 6rem 2rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .tool-card {
+      background-color: #ffffff;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .tool-card.dark {
+      background-color: #374151;
+    }
+
+    .tool-card h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #4f46e5;
+    }
+
+    .dark .tool-card h2 {
+      color: #818cf8;
+    }
+
+    .input-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+    }
+
+    .dark input {
+      background-color: #1f2937;
+      border-color: #4b5563;
+      color: #f3f4f6;
+    }
+
+    button.primary {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    button.primary:hover {
+      background-color: #6366f1;
+    }
+
+    .dark button.primary {
+      background-color: #818cf8;
+    }
+
+    .dark button.primary:hover {
+      background-color: #a5b4fc;
+    }
+
+    .results {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #f8fafc;
+      border-radius: 0.375rem;
+    }
+
+    .dark .results {
+      background-color: #1f2937;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #ffffff;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    footer.dark {
+      background-color: #374151;
+    }
+
+    footer p {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    /* Dark Mode Toggle */
+    #theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      padding: 0.25rem;
+     }
+
+    .amortization-table {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 1rem;
+    }
+
+    .percentage-display {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #4f46e5;
+    }
+
+    .dark .percentage-display {
+      color: #818cf8;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="nav-brand">FinMath</a>
+    <button id="theme-toggle">🌙</button>
+  </nav>
+
+  <main>
+    <h1>Loan & Interest Calculator</h1>
+    
+    <div class="tool-grid">
+      <!-- Loan Calculator -->
+      <div class="tool-card">
+        <h2>Loan Calculator</h2>
+        <div class="input-group">
+          <label>Loan Amount ($)</label>
+          <input type="number" id="loanAmount" placeholder="Principal">
+        </div>
+        <div class="input-group">
+          <label>Annual Interest Rate (%)</label>
+          <input type="number" id="interestRate" step="0.01" placeholder="APR">
+        </div>
+        <div class="input-group">
+          <label>Loan Term (years)</label>
+          <input type="number" id="loanTerm" placeholder="Duration">
+        </div>
+        <button class="primary" onclick="calculateLoan()">Calculate</button>
+        <div class="results">
+          <p>Monthly Payment: $<span id="monthlyPayment">0</span></p>
+          <p>Total Interest: $<span id="totalInterest">0</span></p>
+          <p class="percentage-display">Interest Ratio: <span id="interestRatio">0</span>%</p>
+        </div>
+      </div>
+
+      <!-- Compound Interest Calculator -->
+      <div class="tool-card">
+        <h2>Investment Growth</h2>
+        <div class="input-group">
+          <label>Initial Investment ($)</label>
+          <input type="number" id="initialInvestment" placeholder="Principal">
+        </div>
+        <div class="input-group">
+          <label>Annual Return (%)</label>
+          <input type="number" id="returnRate" step="0.1" placeholder="ROI">
+        </div>
+        <div class="input-group">
+          <label>Years</label>
+          <input type="number" id="investmentYears" placeholder="Horizon">
+        </div>
+        <button class="primary" onclick="calculateInvestment()">Project Growth</button>
+        <div class="results">
+          <p>Future Value: $<span id="futureValue">0</span></p>
+          <p>Total Gains: $<span id="totalGains">0</span></p>
+        </div>
+      </div>
+
+      <!-- Amortization Schedule -->
+      <div class="tool-card">
+        <h2>Payment Breakdown</h2>
+        <div class="chart-container">
+          <canvas id="paymentChart"></canvas>
+        </div>
+        <div class="amortization-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Principal</th>
+                <th>Interest</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody id="amortizationBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 FinMath. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Dark Mode Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const nav = document.querySelector('nav');
+    const footer = document.querySelector('footer');
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    // Check for saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        body.classList.add(savedTheme);
+        nav.classList.add(savedTheme);
+        footer.classList.add(savedTheme);
+        toolCards.forEach(card => card.classList.add(savedTheme));
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Toggle theme
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark');
+        nav.classList.toggle('dark');
+        footer.classList.toggle('dark');
+        toolCards.forEach(card => card.classList.toggle('dark'));
+        
+        const isDarkMode = body.classList.contains('dark');
+        themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    });
+
+    let paymentChart;
+
+    function calculateLoan() {
+      const principal = parseFloat(document.getElementById('loanAmount').value);
+      const annualRate = parseFloat(document.getElementById('interestRate').value) / 100;
+      const years = parseFloat(document.getElementById('loanTerm').value);
+      
+      const monthlyRate = annualRate / 12;
+      const payments = years * 12;
+      const monthlyPayment = (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -payments));
+      const totalInterest = monthlyPayment * payments - principal;
+
+      document.getElementById('monthlyPayment').textContent = monthlyPayment.toFixed(2);
+      document.getElementById('totalInterest').textContent = totalInterest.toFixed(2);
+      document.getElementById('interestRatio').textContent = (totalInterest / principal * 100).toFixed(1);
+      
+      updateAmortizationSchedule(principal, annualRate, years);
+      updatePaymentChart(principal, totalInterest);
+    }
+
+    function calculateInvestment() {
+      const principal = parseFloat(document.getElementById('initialInvestment').value);
+      const annualReturn = parseFloat(document.getElementById('returnRate').value) / 100;
+      const years = parseFloat(document.getElementById('investmentYears').value);
+      
+      const futureValue = principal * Math.pow(1 + annualReturn, years);
+      const gains = futureValue - principal;
+
+      document.getElementById('futureValue').textContent = futureValue.toFixed(2);
+      document.getElementById('totalGains').textContent = gains.toFixed(2);
+    }
+
+    function updateAmortizationSchedule(principal, rate, years) {
+      const monthlyRate = rate / 12;
+      const payments = years * 12;
+      const monthlyPayment = (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -payments));
+      let balance = principal;
+      let html = '';
+
+      for(let year = 1; year <= years; year++) {
+        let yearPrincipal = 0;
+        let yearInterest = 0;
+        
+        for(let month = 1; month <= 12; month++) {
+          const interest = balance * monthlyRate;
+          const principalPaid = monthlyPayment - interest;
+          
+          yearInterest += interest;
+          yearPrincipal += principalPaid;
+          balance -= principalPaid;
+        }
+
+        html += `
+          <tr>
+            <td>${year}</td>
+            <td>$${yearPrincipal.toFixed(2)}</td>
+            <td>$${yearInterest.toFixed(2)}</td>
+            <td>$${balance.toFixed(2)}</td>
+          </tr>
+        `;
+      }
+
+      document.getElementById('amortizationBody').innerHTML = html;
+    }
+
+    function updatePaymentChart(principal, totalInterest) {
+      if(paymentChart) paymentChart.destroy();
+
+      paymentChart = new Chart(document.getElementById('paymentChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Principal', 'Interest'],
+          datasets: [{
+            data: [principal, totalInterest],
+            backgroundColor: ['#4f46e5', '#ef4444']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' },
+            tooltip: { callbacks: { label: ctx => `$${ctx.parsed.toLocaleString()}` } }
+          }
+        }
+      });
+    }
+
+    // Initial example calculation
+    calculateLoan();
+  </script>
+</body>
+</html>
