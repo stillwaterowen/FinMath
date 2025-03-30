@@ -1,1 +1,407 @@
-investments
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investment Returns - FinMath</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Inherited Homepage Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f4f6;
+      color: #111827;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f4f6;
+      color: #111827;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background-color: #1f2937;
+      color: #f3f4f6;
+    }
+
+    /* Navigation Bar */
+    nav {
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1rem 1.5rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    nav.dark {
+      background-color: #374151;
+    }
+
+    .nav-brand {
+      color: #4f46e5;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    /* Main Content */
+    main {
+      padding: 6rem 2rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .tool-card {
+      background-color: #ffffff;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .tool-card.dark {
+      background-color: #374151;
+    }
+
+    .tool-card h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #4f46e5;
+    }
+
+    .dark .tool-card h2 {
+      color: #818cf8;
+    }
+
+    .input-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+    }
+
+    .dark input {
+      background-color: #1f2937;
+      border-color: #4b5563;
+      color: #f3f4f6;
+    }
+
+    button.primary {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    button.primary:hover {
+      background-color: #6366f1;
+    }
+
+    .dark button.primary {
+      background-color: #818cf8;
+    }
+
+    .dark button.primary:hover {
+      background-color: #a5b4fc;
+    }
+
+    .results {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #f8fafc;
+      border-radius: 0.375rem;
+    }
+
+    .dark .results {
+      background-color: #1f2937;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #ffffff;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    footer.dark {
+      background-color: #374151;
+    }
+
+    footer p {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    /* Dark Mode Toggle */
+    #theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      padding: 0.25rem;
+     }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .asset-class {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      background-color: #f8fafc;
+    }
+
+    .dark .asset-class {
+      background-color: #1f2937;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="nav-brand">FinMath</a>
+    <button id="theme-toggle">🌙</button>
+  </nav>
+
+  <main>
+    <h1>Investment Analyzer</h1>
+    
+    <div class="tool-grid">
+      <!-- Compound Growth Calculator -->
+      <div class="tool-card">
+        <h2>Compound Growth Projection</h2>
+        <div class="input-group">
+          <label>Initial Investment ($)</label>
+          <input type="number" id="initialAmount" value="10000">
+        </div>
+        <div class="input-group">
+          <label>Annual Return (%)</label>
+          <input type="number" id="annualReturn" value="7" step="0.1">
+        </div>
+        <div class="input-group">
+          <label>Years</label>
+          <input type="number" id="investmentYears" value="10">
+        </div>
+        <div class="input-group">
+          <label>Monthly Contributions ($)</label>
+          <input type="number" id="monthlyContrib" value="500">
+        </div>
+        <button class="primary" onclick="calculateGrowth()">Project Growth</button>
+        <div class="results">
+          <p>Future Value: $<span id="futureValue">0</span></p>
+          <p>Total Contributions: $<span id="totalContrib">0</span></p>
+          <p>Total Growth: $<span id="totalGrowth">0</span></p>
+        </div>
+      </div>
+
+      <!-- Portfolio Simulator -->
+      <div class="tool-card">
+        <h2>Portfolio Simulator</h2>
+        <div class="portfolio-grid">
+          <div class="asset-class">
+            <label>Stocks (%)</label>
+            <input type="number" id="stocksPct" value="60">
+          </div>
+          <div class="asset-class">
+            <label>Bonds (%)</label>
+            <input type="number" id="bondsPct" value="30">
+          </div>
+          <div class="asset-class">
+            <label>Cash (%)</label>
+            <input type="number" id="cashPct" value="10">
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="allocationChart"></canvas>
+        </div>
+        <div class="results">
+          <p>Projected Return: <span id="portfolioReturn">5.8</span>%</p>
+          <p>Risk Level: <span id="riskLevel">Medium</span></p>
+        </div>
+      </div>
+
+      <!-- Comparison Chart -->
+      <div class="tool-card">
+        <h2>Growth Timeline</h2>
+        <div class="chart-container">
+          <canvas id="growthChart"></canvas>
+        </div>
+        <div class="results">
+          <p>Best Year: $<span id="bestYear">0</span></p>
+          <p>Worst Year: $<span id="worstYear">0</span></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 FinMath. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Dark Mode Toggle (Same as Previous Pages)
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const nav = document.querySelector('nav');
+    const footer = document.querySelector('footer');
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    // Check for saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        body.classList.add(savedTheme);
+        nav.classList.add(savedTheme);
+        footer.classList.add(savedTheme);
+        toolCards.forEach(card => card.classList.add(savedTheme));
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Toggle theme
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark');
+        nav.classList.toggle('dark');
+        footer.classList.toggle('dark');
+        toolCards.forEach(card => card.classList.toggle('dark'));
+        
+        const isDarkMode = body.classList.contains('dark');
+        themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    });
+
+    let growthChart, allocationChart;
+
+    function calculateGrowth() {
+      const initial = parseFloat(document.getElementById('initialAmount').value);
+      const annualReturn = parseFloat(document.getElementById('annualReturn').value) / 100;
+      const years = parseFloat(document.getElementById('investmentYears').value);
+      const monthlyContrib = parseFloat(document.getElementById('monthlyContrib').value);
+      
+      let total = initial;
+      const monthlyRate = annualReturn / 12;
+      const months = years * 12;
+      const growthData = [];
+
+      for(let i = 0; i < months; i++) {
+        total = total * (1 + monthlyRate) + monthlyContrib;
+        if(i % 12 === 11) growthData.push(total.toFixed(2));
+      }
+
+      const totalContrib = initial + (monthlyContrib * months);
+      
+      document.getElementById('futureValue').textContent = total.toFixed(2);
+      document.getElementById('totalContrib').textContent = totalContrib.toFixed(2);
+      document.getElementById('totalGrowth').textContent = (total - totalContrib).toFixed(2);
+      
+      updateGrowthChart(growthData);
+    }
+
+    function updateAllocation() {
+      const stocks = parseFloat(document.getElementById('stocksPct').value);
+      const bonds = parseFloat(document.getElementById('bondsPct').value);
+      const cash = parseFloat(document.getElementById('cashPct').value);
+      
+      // Simple risk calculation
+      const portfolioReturn = (stocks*0.08 + bonds*0.04 + cash*0.01).toFixed(1);
+      const riskLevel = stocks > 70 ? 'High' : stocks > 40 ? 'Medium' : 'Low';
+      
+      document.getElementById('portfolioReturn').textContent = portfolioReturn;
+      document.getElementById('riskLevel').textContent = riskLevel;
+
+      if(allocationChart) allocationChart.destroy();
+      
+      allocationChart = new Chart(document.getElementById('allocationChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Stocks', 'Bonds', 'Cash'],
+          datasets: [{
+            data: [stocks, bonds, cash],
+            backgroundColor: ['#4f46e5', '#10b981', '#e5e7eb']
+          }]
+        }
+      });
+    }
+
+    function updateGrowthChart(data) {
+      const labels = data.map((_, i) => i + 1);
+      
+      if(growthChart) growthChart.destroy();
+      
+      growthChart = new Chart(document.getElementById('growthChart'), {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Portfolio Value',
+            data: data,
+            borderColor: '#4f46e5',
+            tension: 0.1
+          }]
+        },
+        options: {
+          plugins: {
+            tooltip: { callbacks: { label: ctx => `Year ${ctx.label}: $${ctx.raw}` } }
+          }
+        }
+      });
+
+      document.getElementById('bestYear').textContent = Math.max(...data).toLocaleString();
+      document.getElementById('worstYear').textContent = Math.min(...data).toLocaleString();
+    }
+
+    // Event Listeners
+    document.querySelectorAll('#stocksPct, #bondsPct, #cashPct').forEach(input => {
+      input.addEventListener('input', updateAllocation);
+    });
+
+    // Initial calculations
+    calculateGrowth();
+    updateAllocation();
+  </script>
+</body>
+</html>
